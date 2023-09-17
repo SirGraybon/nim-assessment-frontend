@@ -22,7 +22,7 @@ function Main() {
 
   return (
     <div className="page">
-      {orderModal && <OrderModal order={order} setOrderModal={setOrderModal} />}
+      {orderModal && <OrderModal   order={order} setOrderModal={setOrderModal} />}
       <h1>Create an order</h1>
       <div className={styles.container}>
         <div className={styles.subContainer}>

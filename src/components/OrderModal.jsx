@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router";
 import React, { useState } from "react";
 import styles from "./styles/OrderModal.module.css";
 
@@ -5,6 +6,7 @@ function OrderModal({ order, setOrderModal }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const navigate = useNavigate()
 
   const placeOrder = async () => {
     const response = await fetch("/api/orders", {
@@ -19,8 +21,16 @@ function OrderModal({ order, setOrderModal }) {
         items: order
       })
     });
+    console.log(response.status)
     const data = await response.json();
     console.log(data);
+    if(response.status === 200){
+
+      return navigate(`/api/orders/${data.id}`)
+    }
+    
+    return navigate(`/`)
+    
   };
   return (
     <>
