@@ -19,12 +19,9 @@ function ConfirmationPage() {
   console.log(order)
   
   return (
-    <>
     
       <OrderConfirmation name={order.name} orderId={order.id} address={order.address} items={order.items} />
-      <button >Press Me </button>
     
-    </>
   );
 }
 export default ConfirmationPage;

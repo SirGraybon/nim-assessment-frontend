@@ -21,12 +21,12 @@ function OrderModal({ order, setOrderModal }) {
         items: order
       })
     });
-    console.log(response.status)
+    console.log(response)
     const data = await response.json();
     console.log(data);
     if(response.status === 200){
 
-      return navigate(`/api/orders/${data.id}`)
+      return navigate(`/order-confirmation/${data.id}`)
     }
     
     return navigate(`/`)
