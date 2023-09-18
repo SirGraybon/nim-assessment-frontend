@@ -18,7 +18,6 @@ function Main() {
   useEffect(() => {
     getItems();
   }, []);
-  console.log(menuItems)
 
   return (
     <div className="page">

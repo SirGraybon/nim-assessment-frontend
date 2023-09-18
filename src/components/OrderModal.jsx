@@ -18,53 +18,52 @@ function OrderModal({ order, setOrderModal }) {
       const formattedNumber = formatting.join("");
       setPhone(formattedNumber);
     } else {
-      setPhone(false);
+      setPhone(phoneNumber);
     }
     return true;
   };
 
-  const validateForm = async () => {
+  const placeOrder = async () => {
+    const response = await fetch("/api/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name,
+        phone,
+        address,
+        items: order
+      })
+    });
+    console.log(response);
+    const data = await response.json();
+    console.log(data);
+    if (response.status === 200) {
+      return navigate(`/order-confirmation/${data.id}`);
+    }
+
+    return navigate(`/`);
+  };
+  const validateForm = () => {
     const errorLog = {};
     if (!name) {
       errorLog.name = "Please provide your name.";
     }
-    if (!phone) {
+    if (phone.length < 10) {
       errorLog.phone = "Please provide a valid phone number.";
     }
     if (!address) {
       errorLog.address = "Please provide a valid delivery address.";
     }
     setValidator(errorLog);
-  };
+    console.log(phone);
 
-  const placeOrder = async () => {
-    const valid = Object.keys(validator).length;
-    if (valid > 1) {
-      const response = await fetch("/api/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          name,
-          phone,
-          address,
-          items: order
-        })
-      });
-      console.log(response);
-      const data = await response.json();
-      console.log(data);
-      if (response.status === 200) {
-        return navigate(`/order-confirmation/${data.id}`);
-      }
+    const valid = Object.keys(errorLog).length < 1;
+    console.log(valid);
+    if (valid) {
+      placeOrder();
     }
-
-    return navigate(`/`);
-  };
-
-  const handleClick = function () {
-    validateForm().then(placeOrder());
   };
 
   return (
@@ -101,14 +100,15 @@ function OrderModal({ order, setOrderModal }) {
             </label>
           </div>
           <div className={styles.formGroup}>
-            <label htmlFor="phone">
+            <label htmlFor="tel">
               Phone
               <input
+              type="phone"
                 onChange={(e) => {
                   e.preventDefault();
+
                   formatPhone(e.target.value);
                 }}
-                type="phone"
                 id="phone"
               />
               {validator.phone && (
@@ -144,7 +144,7 @@ function OrderModal({ order, setOrderModal }) {
           </button>
           <button
             onClick={() => {
-              handleClick();
+              validateForm();
             }}
             className={styles.orderModalPlaceOrder}
           >
