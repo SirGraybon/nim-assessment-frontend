@@ -20,7 +20,7 @@ function ConfirmationPage() {
   
   return (
     
-      <OrderConfirmation name={order.name} orderId={order.id} address={order.address} items={order.items} phoneNumber={order.phone} />
+      <OrderConfirmation order={order}  />
     
   );
 }
