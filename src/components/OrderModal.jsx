@@ -6,32 +6,67 @@ function OrderModal({ order, setOrderModal }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const navigate = useNavigate()
+  const [validator, setValidator] = useState({});
+  const navigate = useNavigate();
+
+  const formatPhone = (phoneNumber) => {
+    if (phoneNumber.length === 10) {
+      const formatting = phoneNumber.split("");
+      formatting.unshift("(");
+      formatting.splice(4, 0, ")");
+      formatting.splice(8, 0, "-");
+      const formattedNumber = formatting.join("");
+      setPhone(formattedNumber);
+    } else {
+      setPhone(false);
+    }
+    return true;
+  };
+
+  const validateForm = async () => {
+    const errorLog = {};
+    if (!name) {
+      errorLog.name = "Please provide your name.";
+    }
+    if (!phone) {
+      errorLog.phone = "Please provide a valid phone number.";
+    }
+    if (!address) {
+      errorLog.address = "Please provide a valid delivery address.";
+    }
+    setValidator(errorLog);
+  };
 
   const placeOrder = async () => {
-    const response = await fetch("/api/orders", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        name,
-        phone,
-        address,
-        items: order
-      })
-    });
-    console.log(response)
-    const data = await response.json();
-    console.log(data);
-    if(response.status === 200){
-
-      return navigate(`/order-confirmation/${data.id}`)
+    const valid = Object.keys(validator).length;
+    if (valid > 1) {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name,
+          phone,
+          address,
+          items: order
+        })
+      });
+      console.log(response);
+      const data = await response.json();
+      console.log(data);
+      if (response.status === 200) {
+        return navigate(`/order-confirmation/${data.id}`);
+      }
     }
-    
-    return navigate(`/`)
-    
+
+    return navigate(`/`);
   };
+
+  const handleClick = function () {
+    validateForm().then(placeOrder());
+  };
+
   return (
     <>
       <div
@@ -60,6 +95,9 @@ function OrderModal({ order, setOrderModal }) {
                 type="text"
                 id="name"
               />
+              {validator.name && (
+                <div className={styles.invalid}> {validator.name} </div>
+              )}
             </label>
           </div>
           <div className={styles.formGroup}>
@@ -68,11 +106,14 @@ function OrderModal({ order, setOrderModal }) {
               <input
                 onChange={(e) => {
                   e.preventDefault();
-                  setPhone(e.target.value);
+                  formatPhone(e.target.value);
                 }}
                 type="phone"
                 id="phone"
               />
+              {validator.phone && (
+                <div className={styles.invalid}> {validator.phone} </div>
+              )}
             </label>
           </div>
           <div className={styles.formGroup}>
@@ -86,9 +127,13 @@ function OrderModal({ order, setOrderModal }) {
                 type="phone"
                 id="address"
               />
+              {validator.address && (
+                <div className={styles.invalid}> {validator.address} </div>
+              )}{" "}
             </label>
           </div>
         </form>
+        <div> Please ensure all feilds are filled out</div>
 
         <div className={styles.orderModalButtons}>
           <button
@@ -99,7 +144,7 @@ function OrderModal({ order, setOrderModal }) {
           </button>
           <button
             onClick={() => {
-              placeOrder();
+              handleClick();
             }}
             className={styles.orderModalPlaceOrder}
           >

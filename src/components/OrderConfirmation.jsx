@@ -1,7 +1,7 @@
 import styles from "./styles/OrderConfirmation.module.css";
 
 function OrderConfirmation(props) {
-  const { name, orderId, address, items } = props;
+  const { name, orderId, address, items, phoneNumber } = props;
   const firstName = name.split(" ");
   const totalPrice =
     items && items.reduce((total, current) => total + current.item.price, 0);
@@ -12,6 +12,7 @@ function OrderConfirmation(props) {
         <div className={styles.title}>Thanks for your order, {firstName[0]}!</div>
         <p>{name}</p>
         <p>{address}</p>
+        <p>{phoneNumber}</p>
         <p>Order Number: {orderId} </p>
         {items &&
           items.map((item) => (
