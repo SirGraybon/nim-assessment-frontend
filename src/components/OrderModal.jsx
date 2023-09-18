@@ -9,20 +9,6 @@ function OrderModal({ order, setOrderModal }) {
   const [validator, setValidator] = useState({});
   const navigate = useNavigate();
 
-  const formatPhone = (phoneNumber) => {
-    if (phoneNumber.length === 10) {
-      const formatting = phoneNumber.split("");
-      formatting.unshift("(");
-      formatting.splice(4, 0, ")");
-      formatting.splice(8, 0, "-");
-      const formattedNumber = formatting.join("");
-      setPhone(formattedNumber);
-    } else {
-      setPhone(phoneNumber);
-    }
-    return true;
-  };
-
   const placeOrder = async () => {
     const response = await fetch("/api/orders", {
       method: "POST",
@@ -65,7 +51,30 @@ function OrderModal({ order, setOrderModal }) {
       placeOrder();
     }
   };
+  
+  const formatPhone = (value) => {
+    if (!value) setPhone(value);
+    const numbersOnly = value.replace(/[^0\d]/g, "");
+    console.log(value[10])
+    console.log(numbersOnly.length);
+    
+    if (numbersOnly.length < 4) return (numbersOnly);
+    
+    if (numbersOnly.length < 7)
+    return (`(${numbersOnly.slice(0, 3)}) ${numbersOnly.slice(3)}`);
+  return (
+    `(${numbersOnly.slice(0, 3)}) ${numbersOnly.slice(
+      3,
+      6
+      )}-${numbersOnly.slice(6,10)}`
+      );
+    };
 
+    const handleChange = (e) => {
+      const formattedPhone = formatPhone(e.target.value)
+      setPhone(formattedPhone)
+  
+    };
   return (
     <>
       <div
@@ -103,11 +112,13 @@ function OrderModal({ order, setOrderModal }) {
             <label htmlFor="tel">
               Phone
               <input
-              type="phone"
+                pattern="[0-9]"
+                type="phone"
+                value={phone}
                 onChange={(e) => {
                   e.preventDefault();
 
-                  formatPhone(e.target.value);
+                  handleChange(e);
                 }}
                 id="phone"
               />
@@ -133,7 +144,6 @@ function OrderModal({ order, setOrderModal }) {
             </label>
           </div>
         </form>
-        <div> Please ensure all feilds are filled out</div>
 
         <div className={styles.orderModalButtons}>
           <button
