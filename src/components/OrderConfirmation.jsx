@@ -3,16 +3,15 @@ import styles from "./styles/OrderConfirmation.module.css";
 function OrderConfirmation(props) {
   const { order } = props;
   const { name, id, address, items, phone } = order;
-  console.log(order);
 
   const firstName = name.split(" ");
   const subTotal =
     items && items.reduce((total, current) => total + current.item.price, 0);
-  const tax = (subTotal * 1.13 - subTotal)
-  const serviceFee = 1.00
-  const deliveryFee = 5.00
-   const total = subTotal && (subTotal + tax +serviceFee + deliveryFee)
- 
+  const tax = subTotal * 1.13 - subTotal;
+  const serviceFee = 1.0;
+  const deliveryFee = 5.0;
+  const total = subTotal && subTotal + tax + serviceFee + deliveryFee;
+
   return (
     <div className="page">
       <div className={styles.orderConfirmationComponent}>
@@ -39,7 +38,7 @@ function OrderConfirmation(props) {
 
               <div>${subTotal}.00</div>
             </div>
-        
+
             <div className={styles.totalsLine}>
               <div>Tax</div>
 
