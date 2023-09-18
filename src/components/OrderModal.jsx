@@ -6,7 +6,8 @@ function OrderModal({ order, setOrderModal }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const navigate = useNavigate()
+  const [validator, setValidator] = useState({});
+  const navigate = useNavigate();
 
   const placeOrder = async () => {
     const response = await fetch("/api/orders", {
@@ -21,17 +22,59 @@ function OrderModal({ order, setOrderModal }) {
         items: order
       })
     });
-    console.log(response)
+    console.log(response);
     const data = await response.json();
     console.log(data);
-    if(response.status === 200){
-
-      return navigate(`/order-confirmation/${data.id}`)
+    if (response.status === 200) {
+      return navigate(`/order-confirmation/${data.id}`);
     }
-    
-    return navigate(`/`)
-    
+
+    return navigate(`/`);
   };
+  const validateForm = () => {
+    const errorLog = {};
+    if (!name) {
+      errorLog.name = "Please provide your name.";
+    }
+    if (phone.length < 10) {
+      errorLog.phone = "Please provide a valid phone number.";
+    }
+    if (!address) {
+      errorLog.address = "Please provide a valid delivery address.";
+    }
+    setValidator(errorLog);
+    console.log(phone);
+
+    const valid = Object.keys(errorLog).length < 1;
+    console.log(valid);
+    if (valid) {
+      placeOrder();
+    }
+  };
+  
+  const formatPhone = (value) => {
+    if (!value) setPhone(value);
+    const numbersOnly = value.replace(/[^0\d]/g, "");
+    console.log(value[10])
+    console.log(numbersOnly.length);
+    
+    if (numbersOnly.length < 4) return (numbersOnly);
+    
+    if (numbersOnly.length < 7)
+    return (`(${numbersOnly.slice(0, 3)}) ${numbersOnly.slice(3)}`);
+  return (
+    `(${numbersOnly.slice(0, 3)}) ${numbersOnly.slice(
+      3,
+      6
+      )}-${numbersOnly.slice(6,10)}`
+      );
+    };
+
+    const handleChange = (e) => {
+      const formattedPhone = formatPhone(e.target.value)
+      setPhone(formattedPhone)
+  
+    };
   return (
     <>
       <div
@@ -60,19 +103,28 @@ function OrderModal({ order, setOrderModal }) {
                 type="text"
                 id="name"
               />
+              {validator.name && (
+                <div className={styles.invalid}> {validator.name} </div>
+              )}
             </label>
           </div>
           <div className={styles.formGroup}>
-            <label htmlFor="phone">
+            <label htmlFor="tel">
               Phone
               <input
+                pattern="[0-9]"
+                type="phone"
+                value={phone}
                 onChange={(e) => {
                   e.preventDefault();
-                  setPhone(e.target.value);
+
+                  handleChange(e);
                 }}
-                type="phone"
                 id="phone"
               />
+              {validator.phone && (
+                <div className={styles.invalid}> {validator.phone} </div>
+              )}
             </label>
           </div>
           <div className={styles.formGroup}>
@@ -86,6 +138,9 @@ function OrderModal({ order, setOrderModal }) {
                 type="phone"
                 id="address"
               />
+              {validator.address && (
+                <div className={styles.invalid}> {validator.address} </div>
+              )}{" "}
             </label>
           </div>
         </form>
@@ -99,7 +154,7 @@ function OrderModal({ order, setOrderModal }) {
           </button>
           <button
             onClick={() => {
-              placeOrder();
+              validateForm();
             }}
             className={styles.orderModalPlaceOrder}
           >

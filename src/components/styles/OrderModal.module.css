@@ -63,3 +63,10 @@
   background-color: var(--secondary-accent);
   color: var(--secondary-color);
 }
+
+.invalid{
+  margin-top: -15px;
+  font-size: 10pt;
+  font-style: italic;
+  color: red;
+}
