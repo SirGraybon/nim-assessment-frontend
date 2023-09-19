@@ -22,9 +22,7 @@ function OrderModal({ order, setOrderModal }) {
         items: order
       })
     });
-    console.log(response);
     const data = await response.json();
-    console.log(data);
     if (response.status === 200) {
       return navigate(`/order-confirmation/${data.id}`);
     }
@@ -43,38 +41,31 @@ function OrderModal({ order, setOrderModal }) {
       errorLog.address = "Please provide a valid delivery address.";
     }
     setValidator(errorLog);
-    console.log(phone);
 
     const valid = Object.keys(errorLog).length < 1;
-    console.log(valid);
     if (valid) {
       placeOrder();
     }
   };
-  
+
   const formatPhone = (value) => {
     if (!value) setPhone(value);
     const numbersOnly = value.replace(/[^0\d]/g, "");
-    console.log(value[10])
-    console.log(numbersOnly.length);
-    
-    if (numbersOnly.length < 4) return (numbersOnly);
-    
+
+    if (numbersOnly.length < 4) return numbersOnly;
+
     if (numbersOnly.length < 7)
-    return (`(${numbersOnly.slice(0, 3)}) ${numbersOnly.slice(3)}`);
-  return (
-    `(${numbersOnly.slice(0, 3)}) ${numbersOnly.slice(
+      return `(${numbersOnly.slice(0, 3)}) ${numbersOnly.slice(3)}`;
+    return `(${numbersOnly.slice(0, 3)}) ${numbersOnly.slice(
       3,
       6
-      )}-${numbersOnly.slice(6,10)}`
-      );
-    };
+    )}-${numbersOnly.slice(6, 10)}`;
+  };
 
-    const handleChange = (e) => {
-      const formattedPhone = formatPhone(e.target.value)
-      setPhone(formattedPhone)
-  
-    };
+  const handleChange = (e) => {
+    const formattedPhone = formatPhone(e.target.value);
+    setPhone(formattedPhone);
+  };
   return (
     <>
       <div

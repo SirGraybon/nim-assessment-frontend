@@ -64,7 +64,7 @@
   color: var(--secondary-color);
 }
 
-.invalid{
+.invalid {
   margin-top: -15px;
   font-size: 10pt;
   font-style: italic;
