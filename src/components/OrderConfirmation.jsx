@@ -4,20 +4,17 @@ function OrderConfirmation(props) {
   const { order } = props;
   const { name, id, address, items, phone } = order;
 
-  const firstName = name.split(" ");
   const subTotal =
     items && items.reduce((total, current) => total + current.item.price, 0);
   const tax = subTotal * 1.13 - subTotal;
   const serviceFee = 1.0;
   const deliveryFee = 5.0;
-  const total = subTotal && subTotal + tax + serviceFee + deliveryFee;
+  // const total = subTotal && subTotal + tax + serviceFee + deliveryFee;
 
   return (
     <div className="page">
       <div className={styles.orderConfirmationComponent}>
-        <div className={styles.title}>
-          Thanks for your order, {firstName[0]}!
-        </div>
+        <div className={styles.title}>Thanks for your order!</div>
         <div className={styles.receipt}>
           {items &&
             items.map((item) => (
@@ -57,7 +54,7 @@ function OrderConfirmation(props) {
             <div className={styles.totalsLine}>
               <div>Total</div>
 
-              <div>${total}</div>
+              {/* <div>${total.toFixed(2)}</div> */}
             </div>
           </div>
           <div className={styles.customerData}>

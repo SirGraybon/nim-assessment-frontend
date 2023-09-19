@@ -16,7 +16,7 @@
   width: 500px;
   justify-content: space-between;
   padding: 6px;
-  border-top: 1px solid rgba(213, 156, 240, 0.654);
+  border-bottom: 1px solid rgba(213, 156, 240, 0.654);
   margin-top: 10px;
 }
 .totals {
@@ -24,7 +24,7 @@
   align-items: center;
   width: 500px;
   padding-top: 10px;
-  border-top: 2px dotted rgb(213, 156, 240);
+  /* border-top: 2px dotted rgb(213, 156, 240); */
   margin-top: 15px;
 }
 
